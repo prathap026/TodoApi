@@ -1,56 +1,63 @@
-const express=require('express');
-const db=require('mongoose');
-const bodyparser=require('body-parser');
-const cors=require('cors');
+const express = require('express');
+const mongoose = require('mongoose'); // Use 'mongoose' instead of 'db'
+const bodyParser = require('body-parser');
+const cors = require('cors');
 
-const app=express();
-app.use(bodyparser.json());
+const app = express();
+app.use(bodyParser.json());
 app.use(cors());
 
-db.connect('mongodb+srv://saran:saran1309@cluster0.2w4pq.mongodb.net/todolist',{
-    family:4
+// Connect to MongoDB
+mongoose.connect(
+    'mongodb+srv://prathap026:c9uTJ3Hjfp6v4kR5@cluster0.02hih.mongodb.net/todolist',
+    { family: 4 }
+);
+
+mongoose.connection.on('error', console.error.bind(console, "Error connecting to DB"));
+
+mongoose.connection.once('open', () => {
+    console.log('DB connected');
 });
 
-db.connection.on('error',console.error.bind(console,"error throw while connecting to db"));
-
-db.connection.once('open',()=>{
-    console.log('db connected');
+// Define Mongoose Schema and Model
+const ListSchema = new mongoose.Schema({
+    description: String,
+    date: String
 });
 
+const List = mongoose.model('list', ListSchema);
 
-const List=db.model('list',new db.Schema({
-    description:String,
-    date:String
-
-}));
-
-app.post('/post',async(req,res)=>{
-const lists=await new List(req.body).save();
-res.send(lists);
+// CRUD Operations
+app.post('/post', async (req, res) => {
+    const lists = await new List(req.body).save();
+    res.send(lists);
 });
 
-app.get('/getAll',async(req,res)=>{
-const lis=await List.find();
-res.send(lis);
+app.get('/getAll', async (req, res) => {
+    const lis = await List.find();
+    res.send(lis);
 });
 
-app.get('/getById/:id',async(req,res)=>{
-const id=req.params.id;
-const li=await  List.findOne({_id:id});
-res.send(li);
+app.get('/getById/:id', async (req, res) => {
+    const id = req.params.id;
+    const li = await List.findOne({ _id: id });
+    res.send(li);
 });
 
-app.delete('/delete/:id',async(req,res)=>{
-const id=req.params.id;
-const l=await  List.deleteOne({_id:id});
-res.send(l);
+app.delete('/delete/:id', async (req, res) => {
+    const id = req.params.id;
+    const l = await List.deleteOne({ _id: id });
+    res.send(l);
 });
 
-app.put('/update/:id',async(req,res)=>{
-const id=req.params.id;
-const {title,description}=req.body;
-const l=await List.updateOne({_id:id},{$set:{title:title,description:description }});
-res.send(l);
+app.put('/update/:id', async (req, res) => {
+    const id = req.params.id;
+    const { title, description } = req.body;
+    const l = await List.updateOne({ _id: id }, { $set: { title, description } });
+    res.send(l);
 });
 
-app.listen(10000);
+// Start the Server
+app.listen(10000, () => {
+    console.log("Server is running on port 10000");
+});
