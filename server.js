@@ -2,6 +2,8 @@ const express = require('express');
 const mongoose = require('mongoose'); // Use 'mongoose' instead of 'db'
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const dotenv=require('dotenv')
+dotenv.config();
 
 const app = express();
 app.use(bodyParser.json());
@@ -9,7 +11,7 @@ app.use(cors());
 
 // Connect to MongoDB
 mongoose.connect(
-    'mongodb+srv://prathap026:c9uTJ3Hjfp6v4kR5@cluster0.02hih.mongodb.net/todolist',
+    `${process.env.MONGODB_URI}`,
     { family: 4 }
 );
 
