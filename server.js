@@ -5,6 +5,8 @@ const cors = require('cors');
 const dotenv=require('dotenv')
 dotenv.config();
 
+require('./deploy-cron');
+
 const app = express();
 app.use(bodyParser.json());
 app.use(cors());
