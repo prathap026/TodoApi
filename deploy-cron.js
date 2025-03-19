@@ -1,7 +1,6 @@
 const cron = require('node-cron');
 const axios = require('axios');
 
-// 🕒 Cron Job to Trigger Deploy Hook Every 20 Minutes
 cron.schedule('*/20 * * * *', async () => {
     console.log("⏳ Triggering deployment...");
     try {

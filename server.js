@@ -1,5 +1,5 @@
 const express = require('express');
-const mongoose = require('mongoose'); // Use 'mongoose' instead of 'db'
+const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const dotenv=require('dotenv')
@@ -22,8 +22,6 @@ mongoose.connection.on('error', console.error.bind(console, "Error connecting to
 mongoose.connection.once('open', () => {
     console.log('DB connected');
 });
-
-// Define Mongoose Schema and Model
 const ListSchema = new mongoose.Schema({
     description: String,
     date: String
@@ -31,7 +29,6 @@ const ListSchema = new mongoose.Schema({
 
 const List = mongoose.model('list', ListSchema);
 
-// CRUD Operations
 app.post('/post', async (req, res) => {
     const lists = await new List(req.body).save();
     res.send(lists);
